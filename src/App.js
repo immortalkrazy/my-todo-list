@@ -4,6 +4,20 @@ import { v4 as uuidv4 } from 'uuid';
 
 const LOCAL_STORAGE_KEY = 'todoApp.todos';
 
+/**
+ * The App component is the top-level component of the
+ * application. It stores the list of todos in the state and
+ * provides functions to toggle the completed status of a todo
+ * and to add a new todo.
+ *
+ * It renders a TodoList component to display the list of todos,
+ * a form to add new todos, a button to clean up completed todos,
+ * and a counter to display the number of remaining todos.
+ *
+ * The component uses the useEffect hook to load the todos from
+ * local storage and to save the todos to local storage when
+ * the state changes.
+ */
 function App() {
 
   const [todos, setTodos] = useState([]);
@@ -20,6 +34,29 @@ function App() {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos));
   }, [todos])
 
+  /**
+   * Toggles the completed status of a todo.
+   *
+   * @param {string} id - The id of the todo to toggle.
+   */
+
+  function toggleTodo(id) {
+    const newTodos = [...todos];
+    const todo = newTodos.find(todo => todo.id === id);
+    todo.completed = !todo.completed;
+    setTodos(newTodos);
+  }
+
+  /**
+   * Handles the submission of the add todo form.
+   *
+   * Prevents the default form submission behaviour, gets the
+   * value of the text input, and if it is not empty, adds a new
+   * todo to the state with the given name and sets the text
+   * input value to null.
+   * 
+   * @param {Event} e - The event to prevent the default behaviour of.
+   */
   const handleAddTodo = (e) => {
     e.preventDefault();
 
@@ -33,15 +70,26 @@ function App() {
     todoNameRef.current.value = null
   }
 
+  /**
+   * Handles the click of the clear todos button.
+   *
+   * Sets the todos state to an empty array.
+   */
+  const handleClearTodos = () => {
+    const newTodos = todos.filter(todo => !todo.completed);
+    setTodos(newTodos);
+  }
+
   return (
     <>
-      <TodoList todos={todos} />
+      <TodoList todos={todos} toggleTodo={toggleTodo} />
       <form onSubmit={handleAddTodo}>
         <input ref={todoNameRef} type="text" />
         <button type="submit">Add Todo</button>
       </form>
-      <button>Clean Completed</button>
-      <div>0 left to do</div>
+      <button onClick={handleClearTodos}>Clean Completed</button>
+      {/* <button onClick={() => setTodos(todos.filter(todo => !todo.completed))}>Clean Completed</button> */}
+      <div>You have {todos.filter(todo => !todo.completed).length} left to do</div>
     </>
   )
 }
