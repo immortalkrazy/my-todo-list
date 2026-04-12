@@ -1,8 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
 import TodoList from './TodoList';
 import { v4 as uuidv4 } from 'uuid';
+import styled from 'styled-components';
 
 const LOCAL_STORAGE_KEY = 'todoApp.todos';
+
+const CenteredApp = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 20px;
+`;
+
 
 /**
  * The App component is the top-level component of the
@@ -81,16 +93,18 @@ function App() {
   }
 
   return (
-    <>
-      <TodoList todos={todos} toggleTodo={toggleTodo} />
-      <form onSubmit={handleAddTodo}>
-        <input ref={todoNameRef} type="text" />
-        <button type="submit">Add Todo</button>
-      </form>
-      <button onClick={handleClearTodos}>Clean Completed</button>
-      {/* <button onClick={() => setTodos(todos.filter(todo => !todo.completed))}>Clean Completed</button> */}
-      <div>You have {todos.filter(todo => !todo.completed).length} left to do</div>
-    </>
+    <CenteredApp>
+      <>
+        <TodoList todos={todos} toggleTodo={toggleTodo} />
+        <form onSubmit={handleAddTodo}>
+          <input ref={todoNameRef} type="text" />
+          <button type="submit">Add Todo</button>
+        </form>
+        <button onClick={handleClearTodos}>Clean Completed</button>
+        {/* <button onClick={() => setTodos(todos.filter(todo => !todo.completed))}>Clean Completed</button> */}
+        <div>You have {todos.filter(todo => !todo.completed).length} left to do</div>
+      </>
+    </CenteredApp>
   )
 }
 
